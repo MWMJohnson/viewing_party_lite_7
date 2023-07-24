@@ -33,7 +33,7 @@ RSpec.describe MovieFacade do
 
       expect(movie).to be_a(Movie)
       expect(movie.title).to eq("The Godfather")
-      expect(movie.vote_average).to eq(8.71)
+      expect(movie.vote_average).to eq(8.711)
       expect(movie.runtime).to eq(175)
       expect(movie.overview).to be_a(String)
     end
