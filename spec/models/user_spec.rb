@@ -7,7 +7,6 @@ RSpec.describe User, type: :model do
   end
 
   describe "validations" do
-    # require 'pry'; binding.pry
     it { should validate_presence_of(:email) }
     it { should validate_uniqueness_of(:email).case_insensitive }
     it { should validate_presence_of(:name) }
@@ -49,7 +48,6 @@ RSpec.describe User, type: :model do
     
     xit "returns the parties the user is invited to" do 
       expect(user.invitations).to eq([])
-      require 'pry'; binding.pry
       expect(user2.invitations.to_a).to eq([@party1])
 
       @u1p2 = UserParty.create!(user_id: user.id, party_id: @party1.id, is_host: false)

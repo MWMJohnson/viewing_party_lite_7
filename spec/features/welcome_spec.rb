@@ -101,7 +101,6 @@ RSpec.describe "/", type: :feature do
       visit root_path
       visit dashboard_path
       expect(current_path).to eq(root_path)
-      # require 'pry'; binding.pry
       expect(page).to have_content("You must be logged in to access your dashboard")
     end
   end
@@ -211,7 +210,6 @@ RSpec.describe "/", type: :feature do
       click_on "Home"
       visit dashboard_path
       expect(current_path).to eq(dashboard_path)
-      # require 'pry'; binding.pry
       # expect(page).to have_content("You must be logged in to access your dashboard")
     end
   end

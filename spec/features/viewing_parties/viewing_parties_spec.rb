@@ -7,6 +7,12 @@ RSpec.describe "/users/:user_id/movies/:movie_id/viewing-party/new" do
     @user3 = User.create!(name: "Tula", email: "tula@email.com", password: "test", password_confirmation: "test")
     @movie = MovieFacade.new({id: 238}).movie
 
+    visit login_path
+
+    fill_in :email, with: @user.email
+    fill_in :password, with: @user.password
+    click_on "Submit"
+
     visit new_movie_viewing_party_path(@movie.id)
   end
 
@@ -30,7 +36,6 @@ RSpec.describe "/users/:user_id/movies/:movie_id/viewing-party/new" do
 
       it "has a fill in portion of the form", :vcr do
         within(".party_details") do
-          require 'pry'; binding.pry
           expect(page).to have_content("Movie Title: #{@movie.title}")
           expect(page).to have_content("Duration of Party")
           fill_in :duration, with: 190

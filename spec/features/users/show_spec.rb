@@ -34,7 +34,6 @@ RSpec.describe "dashboard_path", type: :feature do
     end
 
     xit "should render the parties the user is invited to", :vcr do 
-      # require 'pry'; binding.pry
       within ".invited_to_parties" do
         expect(page).to have_content("Reservoir Dogs")
         expect(page).to have_content(@party1.party_date)
@@ -48,7 +47,6 @@ RSpec.describe "dashboard_path", type: :feature do
       #   expect(page).to have_content("Things to Do in Denver When You're Dead")
       #   expect(page).to have_content(@party2.party_date)
       #   expect(page).to have_content(@party2.party_time)
-      #   require 'pry'; binding.pry
       #   expect(page).to have_content("Invited")
       #   expect(page).to have_content("Hosted by: #{@user_2.name}")
       #   expect(page).to have_content("#{@user_2.name}")

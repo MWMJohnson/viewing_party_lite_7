@@ -84,15 +84,9 @@ RSpec.describe "/users/:user_id/movies/:movie_id", type: :feature do
       params = {id: 238}
       movie = MovieFacade.new(params).movie
 
-      visit login_path
-      fill_in :email, with: user.email
-      fill_in :password, with: user.password
-      click_on "Submit"
-
       visit movie_path(movie.id)
 
       click_button "Create Viewing Party for The Godfather"
-
       expect(current_path).to eq(movie_path(movie.id))
       expect(page).to have_content("You must be logged in or registered to create a party")
     end

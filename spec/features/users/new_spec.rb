@@ -32,7 +32,6 @@ RSpec.describe "/register", type: :feature do
         click_button "Create a New User"
       end
       user = User.all.last
-      # require 'pry'; binding.pry
       expect(current_path).to eq(dashboard_path)
     end
     # Sad Path 1 - both Name and Email are required.

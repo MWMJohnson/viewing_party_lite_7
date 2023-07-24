@@ -3,7 +3,9 @@ require "rails_helper"
 RSpec.describe MovieFacade do
   describe "#find_movies", :vcr do
     it "can find top rated movies" do
-      top_movies = MovieFacade.new.find_movies
+      user = create(:user)
+      params = {user_id: user.id}
+      top_movies = MovieFacade.new(params).movies
 
       expect(top_movies).to be_an(Array)
 
@@ -16,7 +18,9 @@ RSpec.describe MovieFacade do
     end
 
     it "can search movies by keyword" do
-      movies_by_keyword = MovieFacade.new("Princess").find_movies
+      user = create(:user)
+      params = {keyword: "Princess"}
+      movies_by_keyword = MovieFacade.new(params).movies
 
       expect(movies_by_keyword).to be_an(Array)
 
@@ -28,8 +32,9 @@ RSpec.describe MovieFacade do
 
   describe "#show_movie_details", :vcr do
     it "create a movie object with attributes" do
-      movie_fac = MovieFacade.new(238)
-      movie = movie_fac.show_movie_details
+      user = create(:user)
+      params = {id: 238}
+      movie = MovieFacade.new(params).movie
 
       expect(movie).to be_a(Movie)
       expect(movie.title).to eq("The Godfather")
