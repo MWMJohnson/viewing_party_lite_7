@@ -3,7 +3,11 @@ class User < ApplicationRecord
   has_many :parties, through: :user_parties
 
   validates :name, presence: true
+  validates :password, presence: true
+  validates :password_confirmation, presence: true
   validates :email, presence: true, uniqueness: { case_sensitive: false }
+
+  has_secure_password
 
   def self.other_users(id)
     where.not(id:)

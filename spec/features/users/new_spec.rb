@@ -14,6 +14,8 @@ RSpec.describe "/register", type: :feature do
       within ".register_form" do
         expect(page).to have_field("Name:")
         expect(page).to have_field("Email:")
+        expect(page).to have_field("Password:")
+        expect(page).to have_field("Password Confirmation:")
         expect(page).to have_button("Create a New User")
       end
     end
@@ -21,20 +23,26 @@ RSpec.describe "/register", type: :feature do
     # Happy Path 1 - User fills in name and unique email, and submits
     it "creates a new user, when successfully completing and submitting the form" do
       visit register_path
+    
       within ".register_form" do
-        fill_in "Name", with: "John Doe"
-        fill_in "Email", with: "johndoe@email.com"
+        fill_in :user_name, with: "John Doe"
+        fill_in :user_email, with: "johndoe@email.com"
+        fill_in :user_password, with: "test"
+        fill_in :user_password_confirmation, with: "test"
         click_button "Create a New User"
-        new_user = User.all.last
-        expect(current_path).to eq(user_path(new_user))
       end
+      user = User.all.last
+      # require 'pry'; binding.pry
+      expect(current_path).to eq(user_path(user.id))
     end
     # Sad Path 1 - both Name and Email are required.
     it "does not create a new user, when unsuccessfully completing and submitting the form" do
       visit register_path
 
       within ".register_form" do
-        fill_in "Email", with: "johndoe@email.com"
+        fill_in :user_email, with: "johndoe@email.com"
+        fill_in :user_password, with: "test"
+        fill_in :user_password_confirmation, with: "test"
         click_button "Create a New User"
       end
 
@@ -49,13 +57,31 @@ RSpec.describe "/register", type: :feature do
       visit register_path
 
       within ".register_form" do
-        fill_in "Name", with: user.name
-        fill_in "Email", with: user.email
+        fill_in :user_name, with: user.name
+        fill_in :user_email, with: user.email
+        fill_in :user_password, with: "test"
+        fill_in :user_password_confirmation, with: "test"
         click_button "Create a New User"
       end
 
       expect(current_path).to eq(register_path)
       expect(page).to have_content("Email has already been taken")
+    end
+    # Sad Path 3 - Password and Password Confirmation must both match.
+    it "should not allow users to register without a confirmed password" do
+
+      visit register_path
+
+      within ".register_form" do
+        fill_in :user_name, with: "Bobby Typo"
+        fill_in :user_email, with: "typesfast@email.com"
+        fill_in :user_password, with: "test"
+        fill_in :user_password_confirmation, with: "tes5"
+        click_button "Create a New User"
+      end
+
+      expect(current_path).to eq(register_path)
+      expect(page).to have_content("Error: Password confirmation doesn't match Password")
     end
   end
 end

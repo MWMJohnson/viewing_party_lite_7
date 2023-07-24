@@ -9,8 +9,10 @@ class UsersController < ApplicationController
 
   def create
     user = User.new(user_params)
+    # require 'pry'; binding.pry
     if user.save
-      redirect_to user_path(user.id)
+      # require 'pry'; binding.pry
+      redirect_to "/users/#{user.id}"
     else
       flash[:error] = "Error: #{user.errors.full_messages.to_sentence}"
       redirect_to register_path
@@ -20,6 +22,6 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:name, :email)
+    params.require(:user).permit(:name, :email, :password, :password_confirmation)
   end
 end
