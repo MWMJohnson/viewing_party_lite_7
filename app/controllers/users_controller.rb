@@ -1,6 +1,16 @@
 class UsersController < ApplicationController
+  def index
+
+  end
+  
   def show
-    @user = User.find(params[:id])
+    if current_user
+      @user = User.find(current_user.id)
+      @facade = MovieFacade
+    else
+      flash[:error] = "You must be logged in to access your dashboard"
+      redirect_to root_path
+    end
   end
 
   def new
@@ -10,7 +20,8 @@ class UsersController < ApplicationController
   def create
     user = User.new(user_params)
     if user.save
-      redirect_to "/users/#{user.id}"
+      session[:user_id] = user.id
+      redirect_to "/dashboard"
     else
       flash[:error] = "Error: #{user.errors.full_messages.to_sentence}"
       redirect_to register_path
@@ -24,7 +35,7 @@ class UsersController < ApplicationController
     if user
       if user.authenticate(params[:password])
         session[:user_id] = user.id
-        redirect_to user_path(user.id)
+        redirect_to dashboard_path
       else
         flash[:error] = "Credentials invalid"
         redirect_to login_path
@@ -33,6 +44,11 @@ class UsersController < ApplicationController
       flash[:error] = "Credentials invalid"
       redirect_to login_path
     end
+  end
+
+  def logout
+    reset_session
+    redirect_to root_path
   end
 
   private

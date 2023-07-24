@@ -5,9 +5,9 @@ RSpec.describe "/users/:user_id/movies/:movie_id/viewing-party/new" do
     @user = User.create!(name: "Silly Billy", email: "silly_billy@email.com", password: "test", password_confirmation: "test")
     @user2 = User.create!(name: "Michael", email: "michael@email.com", password: "test", password_confirmation: "test")
     @user3 = User.create!(name: "Tula", email: "tula@email.com", password: "test", password_confirmation: "test")
-    @movie = MovieFacade.get_movie(238)
+    @movie = MovieFacade.new({id: 238}).movie
 
-    visit new_user_movie_viewing_party_path(@user, @movie.id)
+    visit new_movie_viewing_party_path(@movie.id)
   end
 
   describe "as a user on the viewing party page" do
@@ -19,7 +19,7 @@ RSpec.describe "/users/:user_id/movies/:movie_id/viewing-party/new" do
       it "has a button to return to the discover page", :vcr do
         click_button "Discover Page"
 
-        expect(current_path).to eq(user_discover_index_path(@user))
+        expect(current_path).to eq(discover_path)
       end
     end
 
@@ -30,6 +30,7 @@ RSpec.describe "/users/:user_id/movies/:movie_id/viewing-party/new" do
 
       it "has a fill in portion of the form", :vcr do
         within(".party_details") do
+          require 'pry'; binding.pry
           expect(page).to have_content("Movie Title: #{@movie.title}")
           expect(page).to have_content("Duration of Party")
           fill_in :duration, with: 190
@@ -40,7 +41,7 @@ RSpec.describe "/users/:user_id/movies/:movie_id/viewing-party/new" do
           click_button "Create Party"
         end
 
-        expect(current_path).to eq(user_path(@user))
+        expect(current_path).to eq(dashboard_path)
       end
 
       # sad path
@@ -52,7 +53,7 @@ RSpec.describe "/users/:user_id/movies/:movie_id/viewing-party/new" do
           click_button "Create Party"
         end
 
-        expect(current_path).to eq(new_user_movie_viewing_party_path(@user, @movie.id))
+        expect(current_path).to eq(new_movie_viewing_party_path(@movie.id))
         expect(page).to have_content("Error: All fields must be filled in!")
       end
     end

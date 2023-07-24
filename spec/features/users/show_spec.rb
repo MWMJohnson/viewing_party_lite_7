@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "user_path(user)", type: :feature do
+RSpec.describe "dashboard_path", type: :feature do
   describe "on a user dashboard" do
     let(:user) { create(:user) }
     let(:user2) { create(:user) }
@@ -13,20 +13,27 @@ RSpec.describe "user_path(user)", type: :feature do
     end
 
     it "should render only the user's name", :vcr do
-      visit user_path(user)
+      visit login_path
+      fill_in :email, with: user.email
+      fill_in :password, with: user.password
+      click_on "Submit"
 
+      expect(current_path).to eq(dashboard_path)
       expect(page).to have_content("#{user.name}'s Dashboard")
       expect(page).to_not have_content("#{user2.name}'s Dashboard")
     end
 
     it "routes me to the discover movies dashboard", :vcr do
-      visit user_path(user)
+      visit login_path
+      fill_in :email, with: user.email
+      fill_in :password, with: user.password
+      click_on "Submit"
+
       click_button "Discover Movies"
-      expect(current_path).to eq(user_discover_index_path(user))
+      expect(current_path).to eq(discover_path)
     end
 
     xit "should render the parties the user is invited to", :vcr do 
-      visit user_path(user)
       # require 'pry'; binding.pry
       within ".invited_to_parties" do
         expect(page).to have_content("Reservoir Dogs")

@@ -7,14 +7,15 @@ class Party < ApplicationRecord
   has_many :users, through: :user_parties
 
   def movie_details
-    movie = MovieFacade.get_movie(movie_id)
-    
+    movie = MovieFacade.new({id: self.movie_id}).movie
+
     party_info = {
       title: movie.title,
       movie_id: movie.id,
       duration: duration,
       party_date: party_date,
-      party_time: party_time
+      party_time: party_time,
+      image: "https://image.tmdb.org/t/p/original#{movie.poster_path}"
     }
   end
 end

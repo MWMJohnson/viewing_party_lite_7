@@ -33,7 +33,7 @@ RSpec.describe "/register", type: :feature do
       end
       user = User.all.last
       # require 'pry'; binding.pry
-      expect(current_path).to eq(user_path(user.id))
+      expect(current_path).to eq(dashboard_path)
     end
     # Sad Path 1 - both Name and Email are required.
     it "does not create a new user, when unsuccessfully completing and submitting the form" do
