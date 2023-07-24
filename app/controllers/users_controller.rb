@@ -9,13 +9,29 @@ class UsersController < ApplicationController
 
   def create
     user = User.new(user_params)
-    # require 'pry'; binding.pry
     if user.save
-      # require 'pry'; binding.pry
       redirect_to "/users/#{user.id}"
     else
       flash[:error] = "Error: #{user.errors.full_messages.to_sentence}"
       redirect_to register_path
+    end
+  end
+
+  def login_form; end
+
+  def login
+    user = User.find_by(email: params[:email])
+    if user
+      if user.authenticate(params[:password])
+        session[:user_id] = user.id
+        redirect_to user_path(user.id)
+      else
+        flash[:error] = "Credentials invalid"
+        redirect_to login_path
+      end
+    else 
+      flash[:error] = "Credentials invalid"
+      redirect_to login_path
     end
   end
 

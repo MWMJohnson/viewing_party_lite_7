@@ -35,5 +35,58 @@ RSpec.describe "/", type: :feature do
         expect(page).to have_link(user3.email)
       end
     end
+
+    it "can log in with valid credentials" do
+      user = User.create(name: "Testy Tim", email: "test@email.com", password: "test", password_confirmation: "test")
+  
+      visit root_path
+  
+      click_on "Log In"
+  
+      expect(current_path).to eq(login_path)
+  
+      fill_in :email, with: user.email
+      fill_in :password, with: user.password
+  
+      click_on "Submit"
+  
+      expect(current_path).to eq(user_path(user.id))
+    end
+
+    it "cannot log in with invalid email" do
+      user = User.create(name: "Testy Tim", email: "test@email.com", password: "test", password_confirmation: "test")
+  
+      visit root_path
+  
+      click_on "Log In"
+  
+      expect(current_path).to eq(login_path)
+  
+      fill_in :email, with: "test_TYPO_@email.com"
+      fill_in :password, with: user.password
+  
+      click_on "Submit"
+  
+      expect(current_path).to eq(login_path)
+      expect(page).to have_content("Credentials invalid")
+    end
+
+    it "cannot log in with invalid password" do
+      user = User.create(name: "Testy Tim", email: "test@email.com", password: "test", password_confirmation: "test")
+  
+      visit root_path
+  
+      click_on "Log In"
+  
+      expect(current_path).to eq(login_path)
+  
+      fill_in :email, with: user.email
+      fill_in :password, with: "wrong_password"
+  
+      click_on "Submit"
+  
+      expect(current_path).to eq(login_path)
+      expect(page).to have_content("Credentials invalid")
+    end
   end
 end
